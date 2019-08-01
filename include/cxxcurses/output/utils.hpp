@@ -32,7 +32,7 @@ namespace cxxcurses
     return std::make_pair( y, x );
 }
 
-auto get_attrs( ::WINDOW* window, const int y, const int x )
+[[nodiscard]] auto get_attrs( ::WINDOW* window, const int y, const int x )
 {
     const auto col = mvwinch( window, y, x ) & A_COLOR;
     const auto attr = mvwinch( window, y, x ) & A_ATTRIBUTES;

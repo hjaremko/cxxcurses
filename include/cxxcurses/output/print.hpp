@@ -48,10 +48,10 @@ constexpr void print( const int y, const int x, const glyph_string& format_str, 
     print( y, x, parse( format_str, arg ), ( std::forward<Args>( args ) )... );
 }
 
-template <typename T, typename... Args>
-constexpr void print( const int y, const int x, const std::string& format_str, const T& arg, Args&& ... args ) noexcept
+template <typename... Args>
+constexpr void print( const int y, const int x, const std::string& format_str, Args&& ... args ) noexcept
 {
-    print( y, x, parse( glyph_string{ format_str }, arg ), ( std::forward<Args>( args ) )... );
+    print( y, x, glyph_string{ format_str }, ( std::forward<Args>( args ) )... );
 }
 
 //print at curent cursor position versions
@@ -61,15 +61,14 @@ constexpr void print( const glyph_string& format_str, const T& arg, Args&& ... a
     print( parse( format_str, arg ), ( std::forward<Args>( args ) )... );
 }
 
-template <typename T, typename... Args>
-constexpr void print( const std::string& format_str, const T& arg, Args&& ... args ) noexcept
+template <typename... Args>
+constexpr void print( const std::string& format_str, Args&& ... args ) noexcept
 {
-    print( parse( format_str, arg ), ( std::forward<Args>( args ) )... );
+    print( glyph_string{ format_str }, ( std::forward<Args>( args ) )... );
 }
 
 //TODO: centered version
 //centered versions
-
 template <typename T, typename... Args>
 constexpr void print( const int y, const glyph_string& format_str, const T& arg, Args&& ... args ) noexcept
 {
@@ -80,15 +79,6 @@ template <typename... Args>
 constexpr void print( const int y, const std::string& format_str, Args&& ... args ) noexcept
 {
     print( y, glyph_string{ format_str }, ( std::forward<Args>( args ) )... );
-}
-
-template <typename... Args>
-[[deprecated]] void center_mvmwprintw( WINDOW* window, int y, const std::string& string, Args... args )
-{
-    mvwprintw( window, y,
-               ( static_cast<unsigned int>(getmaxx( window )) - string.length() ) / 2,
-               string.c_str(), args... );
-    wrefresh( window );
 }
 
 }
