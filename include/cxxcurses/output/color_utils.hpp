@@ -10,14 +10,14 @@
 namespace cxxcurses
 {
 
-void set_colors( WINDOW* window, color c ) noexcept
+void set_colors(WINDOW* window, color_pair c ) noexcept
 {
-    ::wattron( window, COLOR_PAIR( c ) );
+    ::wattron( window, COLOR_PAIR( c.pair_number ) );
 }
 
 template<typename ...Colors>
 //TODO: WINDOW* -> cxxcurses::window
-void set_colors( WINDOW* window, color c, Colors... colors ) noexcept
+void set_colors(WINDOW* window, color_pair c, Colors... colors ) noexcept
 {
     set_colors( window, c );
     set_colors( window, colors... );

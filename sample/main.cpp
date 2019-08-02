@@ -4,8 +4,8 @@
 
 class custom_type
 {
-    const std::string str{ "user defined" };
-    const double pi{ 3.14 };
+    const std::string str { "user defined" };
+    const double pi { 3.14 };
 
 public:
     friend std::ostream& operator<<( std::ostream& os, const custom_type& type )
@@ -17,7 +17,7 @@ public:
 int main()
 {
     cxxcurses::terminal::initializer init;
-    const auto hello_string{ std::string{ "Hello, world" } };
+    const auto hello_string { std::string{ "Hello, world" } };
 
     cxxcurses::print( 4, "C++ curses centered example" );
     cxxcurses::print( 5, 6, "Here comes {rR} {gB} {bB}!!!",

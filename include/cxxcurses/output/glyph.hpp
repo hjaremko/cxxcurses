@@ -12,7 +12,7 @@ namespace cxxcurses
 class glyph
 {
 public:
-    explicit glyph( char c, color color = color::white ) : char_( c ), color_( color )
+    explicit glyph(char c, color_pair color = color::white ) : char_{ c }, color_{ color }
     {
     }
 
@@ -25,7 +25,7 @@ public:
         wattrset( window, A_NORMAL );
     }
 
-    constexpr char data() const noexcept
+    [[nodiscard]] constexpr char data() const noexcept
     {
         return char_;
     }
@@ -72,7 +72,7 @@ public:
 
 private:
     char char_{ '\0' };
-    color color_{ color::white };
+    color_pair color_;
     std::vector<attribute> attributes_;
 };
 
