@@ -1,10 +1,10 @@
 #ifndef CXXCURSES_PRINT_GLYPH_HPP
 #define CXXCURSES_PRINT_GLYPH_HPP
 
-#include "color.hpp"
-#include "color_utils.hpp"
-#include "glyph_string.hpp"
 #include "attribute.hpp"
+#include "color.hpp"
+#include "color_pair.hpp"
+#include "color_utils.hpp"
 
 namespace cxxcurses
 {
@@ -12,15 +12,16 @@ namespace cxxcurses
 class glyph
 {
 public:
-    explicit glyph(char c, color_pair color = color::white ) : char_{ c }, color_{ color }
+    explicit glyph( char c, color_pair color = color::white )
+            : char_ { c }, color_ { color }
     {
     }
 
     void print( const int y, const int x ) const noexcept
     {
         const auto window = stdscr;
-        set_colors( window, color_ );
-        cxxcurses::set_attributes( window, attributes_ );
+        apply_color( window, color_ );
+        apply_attributes( window, attributes_ );
         mvwaddch( window, y, x, static_cast<chtype>(char_) );
         wattrset( window, A_NORMAL );
     }
@@ -71,7 +72,7 @@ public:
     }
 
 private:
-    char char_{ '\0' };
+    char char_ { '\0' };
     color_pair color_;
     std::vector<attribute> attributes_;
 };

@@ -5,9 +5,21 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+#FILE(GLOB_RECURSE CXXCURSES_SOURCES "src/*.cpp")
+set(CXXCURSES_SOURCES
+        "src/output/attribute.cpp"
+        "src/output/color.cpp"
+        "src/output/color_pair.cpp"
+        "src/output/color_utils.cpp"
+        "src/output/glyph.cpp"
+        "src/output/glyph_string.cpp"
+        "src/output/print.cpp"
+)
+
 #add_library(cxxcurses OBJECT src/output/print.cpp)
 #add_library(cxxcurses SHARED src/output/print.cpp)
-add_library(cxxcurses STATIC src/output/print.cpp)
+#add_library(cxxcurses STATIC src/output/print.cpp)
+add_library(cxxcurses STATIC ${CXXCURSES_SOURCES})
 add_library(project_warnings INTERFACE)
 
 find_package(Curses REQUIRED)
@@ -15,10 +27,10 @@ find_package(Curses REQUIRED)
 target_include_directories(cxxcurses
     PUBLIC
         $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
         $<BUILD_INTERFACE:${CURSES_INCLUDE_DIR}>
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/
 )
 
 if (MSVC)
@@ -26,7 +38,7 @@ if (MSVC)
 else()
     target_compile_options(project_warnings
                          INTERFACE
-                        -Werror
+#                         -Werror
                          -Wall
                          -Wextra
                          -Wshadow

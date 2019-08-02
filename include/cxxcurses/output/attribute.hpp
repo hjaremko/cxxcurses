@@ -21,17 +21,7 @@ enum class attribute
     invisible = A_INVIS
 };
 
-std::unordered_map<char, attribute> char_to_attribute{
-        { 'N', attribute::normal },
-        { 'S', attribute::standout },
-        { 'U', attribute::underline },
-        { 'R', attribute::reverse },
-        { 'X', attribute::blink },
-        { 'D', attribute::dim },
-        { 'B', attribute::bold },
-        { 'P', attribute::protect },
-        { 'I', attribute::invisible }
-};
+extern std::unordered_map<char, attribute> char_to_attribute;
 
 }
 #endif //CXXCURSES_PRINT_ATTRIBUTE_HPP

@@ -36,13 +36,13 @@ struct initializer
 private:
     void init_color_pairs() const noexcept
     {
-        color_pair(color::red, color::black);
-        color_pair(color::green, color::black);
-        color_pair(color::yellow, color::black);
-        color_pair(color::blue, color::black);
-        color_pair(color::magenta, color::black);
-        color_pair(color::cyan, color::black);
-        color_pair(color::white, color::black);
+        color_pair( color::red, color::black );
+        color_pair( color::green, color::black );
+        color_pair( color::yellow, color::black );
+        color_pair( color::blue, color::black );
+        color_pair( color::magenta, color::black );
+        color_pair( color::cyan, color::black );
+        color_pair( color::white, color::black );
     }
 };
 

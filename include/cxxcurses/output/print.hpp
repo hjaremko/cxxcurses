@@ -7,39 +7,17 @@ namespace cxxcurses
 {
 
 //TODO: WINDOW* versions
-void print( const int y, const int x, const std::string& format ) noexcept
-{
-    mvwprintw( stdscr, y, x, format.c_str() );
-}
+void print( int y, int x, const std::string& format ) noexcept;
 
-void print( const int y, const int x, const glyph_string& format ) noexcept
-{
-    format.print( y, x );
-}
+void print( int y, int x, const glyph_string& format ) noexcept;
 
-void print( const int y, const std::string& format ) noexcept
-{
-    const auto x_centered{ ( getmaxx( stdscr ) - format.size() ) / 2 };
-    mvwprintw( stdscr, y, x_centered, format.c_str() );
-}
+void print( int y, const std::string& format ) noexcept;
 
-void print( const int y, const glyph_string& format ) noexcept
-{
-    const auto x_centered{ ( getmaxx( stdscr ) - format.size() ) / 2 };
-    format.print( y, x_centered );
-}
+void print( int y, const glyph_string& format ) noexcept;
 
-void print( const std::string& format ) noexcept
-{
-    const auto [y, x] = get_current_yx();
-    mvwprintw( stdscr, y, x, format.c_str() );
-}
+void print( const std::string& format ) noexcept;
 
-void print( const glyph_string& format ) noexcept
-{
-    const auto [y, x] = get_current_yx();
-    format.print( y, x );
-}
+void print( const glyph_string& format ) noexcept;
 
 //move and print versions
 template <typename T, typename... Args>
@@ -49,7 +27,7 @@ constexpr void print( const int y, const int x, const glyph_string& format_str, 
 }
 
 template <typename... Args>
-constexpr void print( const int y, const int x, const std::string& format_str, Args&& ... args ) noexcept
+constexpr void print( const int y, const int x, const std::string_view format_str, Args&& ... args ) noexcept
 {
     print( y, x, glyph_string { format_str }, ( std::forward<Args>( args ) )... );
 }
@@ -62,7 +40,7 @@ constexpr void print( const glyph_string& format_str, const T& arg, Args&& ... a
 }
 
 template <typename... Args>
-constexpr void print( const std::string& format_str, Args&& ... args ) noexcept
+constexpr void print( const std::string_view format_str, Args&& ... args ) noexcept
 {
     print( glyph_string { format_str }, ( std::forward<Args>( args ) )... );
 }
@@ -76,7 +54,7 @@ constexpr void print( const int y, const glyph_string& format_str, const T& arg,
 }
 
 template <typename... Args>
-constexpr void print( const int y, const std::string& format_str, Args&& ... args ) noexcept
+constexpr void print( const int y, const std::string_view format_str, Args&& ... args ) noexcept
 {
     print( y, glyph_string { format_str }, ( std::forward<Args>( args ) )... );
 }
