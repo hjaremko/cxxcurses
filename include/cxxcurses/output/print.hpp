@@ -31,13 +31,13 @@ void print( const int y, const glyph_string& format ) noexcept
 
 void print( const std::string& format ) noexcept
 {
-    const auto[y, x] = get_current_yx();
+    const auto [y, x] = get_current_yx();
     mvwprintw( stdscr, y, x, format.c_str() );
 }
 
 void print( const glyph_string& format ) noexcept
 {
-    const auto[y, x] = get_current_yx();
+    const auto [y, x] = get_current_yx();
     format.print( y, x );
 }
 
@@ -51,10 +51,10 @@ constexpr void print( const int y, const int x, const glyph_string& format_str, 
 template <typename... Args>
 constexpr void print( const int y, const int x, const std::string& format_str, Args&& ... args ) noexcept
 {
-    print( y, x, glyph_string{ format_str }, ( std::forward<Args>( args ) )... );
+    print( y, x, glyph_string { format_str }, ( std::forward<Args>( args ) )... );
 }
 
-//print at curent cursor position versions
+//print at current cursor position versions
 template <typename T, typename... Args>
 constexpr void print( const glyph_string& format_str, const T& arg, Args&& ... args ) noexcept
 {
@@ -64,7 +64,7 @@ constexpr void print( const glyph_string& format_str, const T& arg, Args&& ... a
 template <typename... Args>
 constexpr void print( const std::string& format_str, Args&& ... args ) noexcept
 {
-    print( glyph_string{ format_str }, ( std::forward<Args>( args ) )... );
+    print( glyph_string { format_str }, ( std::forward<Args>( args ) )... );
 }
 
 //TODO: centered version
@@ -78,7 +78,7 @@ constexpr void print( const int y, const glyph_string& format_str, const T& arg,
 template <typename... Args>
 constexpr void print( const int y, const std::string& format_str, Args&& ... args ) noexcept
 {
-    print( y, glyph_string{ format_str }, ( std::forward<Args>( args ) )... );
+    print( y, glyph_string { format_str }, ( std::forward<Args>( args ) )... );
 }
 
 }

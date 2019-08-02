@@ -12,7 +12,7 @@ namespace cxxcurses
 class glyph_string : public std::vector<glyph>
 {
 public:
-    explicit glyph_string( const std::string& string, color color = color::white )
+    explicit glyph_string(const std::string& string, color_pair color = color::white )
     {
         for ( const auto& c : string )
         {

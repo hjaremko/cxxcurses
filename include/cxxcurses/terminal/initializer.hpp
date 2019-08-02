@@ -1,8 +1,7 @@
 #ifndef CXXCURSES_INIT_HPP
 #define CXXCURSES_INIT_HPP
 
-#include <stdexcept>
-
+#include "../cxxcurses.hpp"
 #include "../output/print.hpp"
 
 namespace cxxcurses::terminal
@@ -13,8 +12,8 @@ struct initializer
     initializer()
     {
         ::initscr();
-        ::noecho();
-        ::curs_set( 0 );
+        set_echo( false );
+        cursor::set_visibility( cursor::visibility::invisible );
 
         if ( ::has_colors() == FALSE )
         {
@@ -31,19 +30,19 @@ struct initializer
     {
         attrset( A_NORMAL );
         ::endwin();
-        fflush( stdout );
+        ::fflush( stdout );
     }
 
 private:
     void init_color_pairs() const noexcept
     {
-        ::init_pair( static_cast<chtype>(color::red), COLOR_RED, COLOR_BLACK );
-        ::init_pair( static_cast<chtype>(color::green), COLOR_GREEN, COLOR_BLACK );
-        ::init_pair( static_cast<chtype>(color::yellow), COLOR_YELLOW, COLOR_BLACK );
-        ::init_pair( static_cast<chtype>(color::blue), COLOR_BLUE, COLOR_BLACK );
-        ::init_pair( static_cast<chtype>(color::magenta), COLOR_MAGENTA, COLOR_BLACK );
-        ::init_pair( static_cast<chtype>(color::cyan), COLOR_CYAN, COLOR_BLACK );
-        ::init_pair( static_cast<chtype>(color::white), COLOR_WHITE, COLOR_BLACK );
+        color_pair(color::red, color::black);
+        color_pair(color::green, color::black);
+        color_pair(color::yellow, color::black);
+        color_pair(color::blue, color::black);
+        color_pair(color::magenta, color::black);
+        color_pair(color::cyan, color::black);
+        color_pair(color::white, color::black);
     }
 };
 
