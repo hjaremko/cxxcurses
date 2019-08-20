@@ -1,6 +1,6 @@
 #include <string>
 #include <ostream>
-#include "../include/cxxcurses/cxxcurses.hpp"
+#include "cxxcurses.hpp"
 
 class custom_type
 {
@@ -16,7 +16,7 @@ public:
 
 int main()
 {
-    cxxcurses::terminal::initializer init;
+    cxxcurses::initializer init;
     const auto hello_string { std::string{ "Hello, world" } };
 
     cxxcurses::print( 4, "C++ curses centered example" );

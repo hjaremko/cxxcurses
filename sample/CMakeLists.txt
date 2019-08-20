@@ -7,10 +7,12 @@ set(CURSES_NEED_NCURSES TRUE)
 find_package(Curses REQUIRED)
 
 include_directories(SYSTEM "${CURSES_INCLUDE_DIR}")
+include_directories("../include")
 link_directories("${CURSES_INCLUDE_DIRS}")
-link_libraries(${CURSES_LIBRARIES})
+link_directories("${PROJECT_SOURCE_DIR}/../build/lib")
 
 set(SOURCE_FILES main.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_link_libraries(${PROJECT_NAME})
+#target_link_libraries(${PROJECT_NAME} ${CURSES_LIBRARIES} cxxcurses)
+target_link_libraries(${PROJECT_NAME} ${CURSES_LIBRARIES})
