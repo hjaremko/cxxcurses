@@ -34,3 +34,9 @@
 # CLion
 .idea
 cmake-build*
+
+# build directory
+build
+
+#Dolphin
+.directory

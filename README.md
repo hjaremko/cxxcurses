@@ -4,34 +4,43 @@
   <img src="https://i.imgur.com/rW7aM3J.png" alt="Example"/>
 </p>
 
-Custom C++ wrapper aiming to provide more friendly interface
+Header-only C++ wrapper aiming to provide more friendly interface
 to the most used (at least by me) functions of ncurses instead of not so fun to use C interface.
 
-### Prerequisites
+```cpp
+#include "cxxcurses.hpp"
 
-You need to have `ncurses` installed or in case of building on Windows `pdcurses`.
+#include <ostream>
+#include <string>
 
-### Building
-#### Linux
-```
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make
+class custom_type
+{
+    const std::string str{ "user defined" };
+    const double pi{ 3.14 };
+
+public:
+    friend std::ostream& operator<<( std::ostream& os, const custom_type& type )
+    {
+        return os << "str: " << type.str << " pi: " << type.pi;
+    }
+};
+
+int main()
+{
+    cxxcurses::initializer init;
+    const auto hello_string{ std::string{ "Hello, world" } };
+
+    cxxcurses::print( 4, "C++ curses centered example" );
+    cxxcurses::print( 5, 6, "Here comes {rR} {gB} {bB}!!!", "multi", "colored", hello_string );
+    cxxcurses::print( 6, 6, "Supports {R} types!", custom_type{} );
+
+    ::getch();
+    return 0;
+}
+
 ```
 
-#### Windows Visual Studio
-```
-$ mkdir build
-$ cd build
-$ cmake .. -DCURSES_LIBRARY="pdcurses" -DCURSES_INCLUDE_PATH="<path to pdcurses>"
-$ msbuild libcxxcurses.sln
-```
 
-#### Windows MinGW
-```
-$ mkdir build
-$ cd build
-$ cmake .. -G "MinGW Makefiles" -DCURSES_LIBRARY="pdcurses" -DCURSES_INCLUDE_PATH="<path to pdcurses>"
-$ mingw32-make
-```
+### Building with cxxcurses
+
+You need to have `ncurses` installed on your system (in case of Windows `pdcurses`) and link it to your project as usual.

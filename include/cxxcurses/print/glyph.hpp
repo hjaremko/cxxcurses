@@ -1,27 +1,33 @@
-#ifndef CXXCURSES_PRINT_GLYPH_HPP
-#define CXXCURSES_PRINT_GLYPH_HPP
+// ------------------------------------------------------------------------------------------------
+// cxxcurses - glyph.hpp header file
+// ------------------------------------------------------------------------------------------------
+// Copyright (c) 2019 Hubert Jaremko
+//
+// This work is licensed under the terms of the MIT license.
+// For a copy, see <https://opensource.org/licenses/MIT>.
+// ------------------------------------------------------------------------------------------------
 
-#include "color.hpp"
-#include "color_utils.hpp"
-#include "glyph_string.hpp"
+#ifndef CXXCURSES_GLYPH_HPP
+#define CXXCURSES_GLYPH_HPP
+
 #include "attribute.hpp"
+#include "color_pair.hpp"
 
 namespace cxxcurses
 {
-
 class glyph
 {
 public:
-    explicit glyph(char c, color_pair color = color::white ) : char_{ c }, color_{ color }
+    explicit glyph( char c, color_pair color = color::white ) : char_{ c }, color_{ color }
     {
     }
 
     void print( const int y, const int x ) const noexcept
     {
         const auto window = stdscr;
-        set_colors( window, color_ );
-        cxxcurses::set_attributes( window, attributes_ );
-        mvwaddch( window, y, x, static_cast<chtype>(char_) );
+        apply_color( window, color_ );
+        apply_attributes( window, attributes_ );
+        mvwaddch( window, y, x, static_cast<chtype>( char_ ) );
         wattrset( window, A_NORMAL );
     }
 
@@ -75,7 +81,6 @@ private:
     color_pair color_;
     std::vector<attribute> attributes_;
 };
+} // namespace cxxcurses
 
-}
-
-#endif //CXXCURSES_PRINT_GLYPH_HPP
+#endif // CXXCURSES_GLYPH_HPP
