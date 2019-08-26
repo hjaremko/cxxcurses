@@ -1,11 +1,18 @@
+// ------------------------------------------------------------------------------------------------
+// cxxcurses - header only ncurses wrapper
+// ------------------------------------------------------------------------------------------------
+// Copyright (c) 2019 Hubert Jaremko
+//
+// This work is licensed under the terms of the MIT license.
+// For a copy, see <https://opensource.org/licenses/MIT>.
+// ------------------------------------------------------------------------------------------------
+
 #ifndef CXXCURSES_HPP
 #define CXXCURSES_HPP
 
 #include <curses.h>
 
-#include "cxxcurses_terminal.hpp"
-#include "cxxcurses_output.hpp"
-//#include "cxxcurses_widget.hpp"
-//#include "cxxcurses_window.hpp"
+#include "print.hpp"
+#include "terminal.hpp"
 
-#endif //CXXCURSES_HPP
+#endif // CXXCURSES_HPP
