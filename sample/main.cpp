@@ -20,9 +20,9 @@ int main()
     cxxcurses::initializer init;
     const auto hello_string{ std::string{ "Hello, world" } };
 
-    cxxcurses::print( 4, "C++ curses centered example" );
-    cxxcurses::print( 5, 6, "Here comes {rR} {gB} {bB}!!!", "multi", "colored", hello_string );
-    cxxcurses::print( 6, 6, "Supports {R} types!", custom_type{} );
+    cxxcurses::print( 4 )( "C++ curses centered example" );
+    cxxcurses::print( 5, 6 )( "Here comes {rR} {gB} {bB}!!!", "multi", "colored", hello_string );
+    cxxcurses::print( 6, 6 )( "Supports {R} types!", custom_type{} );
 
     ::getch();
     return 0;
