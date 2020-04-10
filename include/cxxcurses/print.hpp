@@ -1,7 +1,7 @@
 // ------------------------------------------------------------------------------------------------
 // cxxcurses - print.hpp header file
 // ------------------------------------------------------------------------------------------------
-// Copyright (c) 2019 Hubert Jaremko
+// Copyright (c) 2020 Hubert Jaremko
 //
 // This work is licensed under the terms of the MIT license.
 // For a copy, see <https://opensource.org/licenses/MIT>.
@@ -11,89 +11,63 @@
 #define CXXCURSES_PRINT_HPP
 
 #include "print/glyph_string.hpp"
-#include "utility.hpp"
+#include "widgets.hpp"
+
+#include <optional>
+#include <ostream>
 
 namespace cxxcurses
 {
-// TODO: WINDOW*(cxxcurses::window) versions
-
-inline void print( const int y, const int x, const glyph_string& format ) noexcept
-{
-    format.print( y, x );
-}
-
-inline void print( const int y, const glyph_string& format ) noexcept
-{
-    const auto x_centered{ ( getmaxx( stdscr ) - format.size() ) / 2 };
-    format.print( y, x_centered );
-}
-
-inline void print( const std::string_view format ) noexcept
-{
-    const auto [ y, x ] = get_current_yx();
-    mvwprintw( stdscr, y, x, format.data() );
-}
-
-inline void print( const glyph_string& format ) noexcept
-{
-    const auto [ y, x ] = get_current_yx();
-    format.print( y, x );
-}
-
-// move and print versions
-template <typename T, typename... Args>
-constexpr void print( const int y,
-                      const int x,
-                      const glyph_string& format_str,
-                      const T& arg,
-                      Args&&... args ) noexcept
-{
-    print( y, x, parse( format_str, arg ), ( std::forward<Args>( args ) )... );
-}
 
 struct printer
 {
-    using coords_t = std::pair<int, std::optional<int>>;
-    coords_t coords;
-
     template <typename... Args>
-    constexpr void operator()( const std::string_view format_str, Args&&... args )
+    auto operator()( std::string_view str, Args&&... args ) -> printer
     {
-        const auto x = [&]() -> int {
-            if ( coords.second )
-                return *coords.second;
-            else
-                return ( getmaxx( stdscr ) - format_str.size() ) / 2;
-        }();
-
-        print( coords.first, x, glyph_string{ format_str }, ( std::forward<Args>( args ) )... );
+        parse( str, format_str, ( std::forward<Args>( args ) )... );
+        return *this;
     }
+
+    using coords_t = std::pair<std::optional<int>, std::optional<int>>;
+    const coords_t coords {};
+    glyph_string format_str;
 };
 
-constexpr printer print( const int y, const int x )
+// move and print
+auto format( const int y, const int x ) -> printer
 {
     return { std::make_pair( y, x ) };
 }
 
 // centered
-constexpr printer print( const int y )
+auto format( const int y ) -> printer
 {
     return { std::make_pair( y, std::nullopt ) };
 }
 
-// print at current cursor position versions
-template <typename T, typename... Args>
-constexpr void print( const glyph_string& format_str, const T& arg, Args&&... args ) noexcept
+template <typename... Args>
+auto format( std::string_view str, Args&&... args ) -> printer
 {
-    print( parse( format_str, arg ), ( std::forward<Args>( args ) )... );
+    auto format_str { glyph_string {} };
+    parse( str, format_str, ( std::forward<Args>( args ) )... );
+    return printer { std::make_pair( std::nullopt, std::nullopt ), format_str };
 }
 
-template <typename... Args>
-constexpr void print( const std::string_view format_str, Args&&... args ) noexcept
+auto operator<<( const widget::window_interface& w, const printer& formatted )
+    -> const widget::window_interface&
 {
-    print( glyph_string{ format_str }, ( std::forward<Args>( args ) )... );
+    const auto x =
+        formatted.coords.second
+            ? *formatted.coords.second
+            : ( w.max_yx().second - formatted.format_str.size() ) / 2;
+
+    const auto y =
+        formatted.coords.first ? *formatted.coords.first : w.current_yx().first;
+
+    w.move_cursor( y, x );
+    formatted.format_str.print( w.get() );
+    return w;
 }
 
 } // namespace cxxcurses
-
 #endif // CXXCURSES_PRINT_HPP

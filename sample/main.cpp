@@ -5,25 +5,36 @@
 
 class custom_type
 {
-    const std::string str{ "user defined" };
-    const double pi{ 3.14 };
-
 public:
-    friend std::ostream& operator<<( std::ostream& os, const custom_type& type )
+    friend auto operator<<( std::ostream& os, const custom_type& type )
+        -> std::ostream&
     {
         return os << "str: " << type.str << " pi: " << type.pi;
     }
+
+private:
+    const std::string str { "user defined" };
+    const double pi { 3.14 };
 };
 
-int main()
+auto main() -> int
 {
-    cxxcurses::initializer init;
-    const auto hello_string{ std::string{ "Hello, world" } };
+    namespace cc = cxxcurses;
+    const auto& main_win = cc::terminal::main_win;
+    cc::terminal init;
 
-    cxxcurses::print( 4 )( "C++ curses centered example" );
-    cxxcurses::print( 5, 6 )( "Here comes {rR} {gB} {bB}!!!", "multi", "colored", hello_string );
-    cxxcurses::print( 6, 6 )( "Supports {R} types!", custom_type{} );
+    const auto hello_string { std::string { "Hello, world" } };
 
-    ::getch();
+    main_win << cc::format( 4 )( "C++ curses centered example" );
+    main_win << cc::format( 5, 6 )(
+        "Here comes {rR} {gB} {bB}!!!", "multi", "colored", hello_string );
+    main_win << cc::format( 6, 6 )( "Supports {R} types!", custom_type {} );
+
+    auto some_window { cc::widget::window { { 10, 5, 5, 30 },
+                                            cc::terminal::main_win } };
+
+    some_window << cc::format( 2, 2 )( "Hello from sub-window!" );
+    some_window.get_char();
+
     return 0;
 }

@@ -1,7 +1,7 @@
 // ------------------------------------------------------------------------------------------------
 // cxxcurses - glyph_string.hpp header file
 // ------------------------------------------------------------------------------------------------
-// Copyright (c) 2019 Hubert Jaremko
+// Copyright (c) 2020 Hubert Jaremko
 //
 // This work is licensed under the terms of the MIT license.
 // For a copy, see <https://opensource.org/licenses/MIT>.
@@ -13,6 +13,7 @@
 #include "color_pair.hpp"
 #include "glyph.hpp"
 
+#include <algorithm>
 #include <sstream>
 #include <string_view>
 #include <vector>
@@ -22,7 +23,15 @@ namespace cxxcurses
 class glyph_string : public std::vector<glyph>
 {
 public:
-    explicit glyph_string( const std::string_view& string, color_pair color = color::white )
+    glyph_string() = default;
+    glyph_string( const glyph_string& ) = default;
+    glyph_string( glyph_string&& ) = default;
+    auto operator=( const glyph_string& ) -> glyph_string& = default;
+    auto operator=( glyph_string && ) -> glyph_string& = default;
+    ~glyph_string() = default;
+
+    explicit glyph_string( const std::string_view& string,
+                           color_pair color = color::white )
     {
         for ( const auto& c : string )
         {
@@ -30,63 +39,82 @@ public:
         }
     }
 
-    void print( const int y, const int x ) const noexcept
+    void print( raw::window_ptr win ) const noexcept
     {
-        int i{ 0 };
-
         for ( const auto& g : *this )
         {
-            g.print( y, x + i++ );
+            g.print( win );
         }
     }
 };
 
-// TODO: refactor and optimize
-template <typename T>
-glyph_string parse( glyph_string parsed, const T& arg )
+auto parse_arg( std::string_view /*to_parse*/, glyph_string & /*parsed*/ )
+    -> glyph_string
 {
-    auto ss{ std::stringstream{} };
-    auto glyph_color{ color_pair{ color::white } };
-    auto glyph_attributes{ std::vector<attribute>{} };
-    const auto opening_pos{ std::find( std::begin( parsed ), std::end( parsed ), glyph( '{' ) ) };
-    const auto closing_pos{ std::find( std::begin( parsed ), std::end( parsed ), glyph( '}' ) ) };
-    const auto format_len{ std::distance( opening_pos, closing_pos ) };
+    return {};
+}
 
-    if ( opening_pos != std::end( parsed ) && closing_pos != std::end( parsed ) &&
-         opening_pos < closing_pos )
+template <typename T, typename... Args>
+auto parse_arg( std::string_view to_parse,
+                glyph_string& parsed,
+                const T& arg,
+                Args&&... args ) -> glyph_string
+{
+    auto colors { color_pair { color::white } };
+    auto attributes { std::vector<attribute> {} };
+
+    size_t position = 0;
+    for ( auto ch = std::begin( to_parse ); *ch != '}'; ++ch, ++position )
     {
-        if ( auto attributes{ std::vector<glyph>( opening_pos, closing_pos ) };
-             !attributes.empty() )
+        if ( char_to_color.count( *ch ) )
         {
-            for ( const auto& flag : attributes )
-            {
-                if ( char_to_color.count( flag.data() ) )
-                {
-                    glyph_color = color_pair{ char_to_color.at( flag.data() ) };
-                }
-
-                if ( char_to_attribute.count( flag.data() ) )
-                {
-                    glyph_attributes.push_back( char_to_attribute.at( flag.data() ) );
-                }
-            }
+            colors = color_pair { to_color( *ch ) };
         }
 
-        ss << arg;
-        auto parsed_arg{ glyph_string{ ss.str(), glyph_color } };
-
-        for ( auto& g : parsed_arg )
+        if ( char_to_attribute.count( *ch ) )
         {
-            g.set_attributes( glyph_attributes );
+            attributes.push_back( to_attribute( *ch ) );
+        }
+    }
+
+    auto ss { std::stringstream {} };
+    ss << arg;
+    auto parsed_arg { cxxcurses::glyph_string { ss.str(), colors } };
+
+    for ( auto& g : parsed_arg )
+    {
+        g.set_attributes( attributes );
+    }
+
+    std::move(
+        parsed_arg.begin(), parsed_arg.end(), std::back_inserter( parsed ) );
+    to_parse.remove_prefix( std::min( position + 1, to_parse.size() ) );
+
+    return parse( to_parse, parsed, std::forward<Args>( args )... );
+}
+
+template <typename... Args>
+auto parse( std::string_view to_parse, glyph_string& parsed, Args&&... args )
+    -> glyph_string
+{
+    size_t position = 0;
+    for ( auto ch : to_parse )
+    {
+        if ( ch != '{' )
+        {
+            parsed.emplace_back( ch );
+        }
+        else
+        {
+            to_parse.remove_prefix( position );
+            return parse_arg( to_parse, parsed, std::forward<Args>( args )... );
         }
 
-        auto it{ parsed.insert(
-            closing_pos + 1, std::begin( parsed_arg ), std::end( parsed_arg ) ) };
-        parsed.erase( it - format_len - 1, it );
+        ++position;
     }
 
     return parsed;
 }
-} // namespace cxxcurses
 
+} // namespace cxxcurses
 #endif // CXXCURSES_GLYPH_STRING_HPP

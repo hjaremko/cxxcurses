@@ -1,5 +1,5 @@
 // ------------------------------------------------------------------------------------------------
-// cxxcurses - initializer.hpp header file
+// cxxcurses - terminal.hpp header file
 // ------------------------------------------------------------------------------------------------
 // Copyright (c) 2019 Hubert Jaremko
 //
@@ -10,19 +10,24 @@
 #ifndef CXXCURSES_TERMINAL_INITIALIZER_HPP
 #define CXXCURSES_TERMINAL_INITIALIZER_HPP
 
+#include "../print.hpp"
+#include "../widgets.hpp"
+
+#include <curses.h>
+
 namespace cxxcurses
 {
-struct initializer
+struct terminal
 {
-    initializer()
+    terminal()
     {
         ::initscr();
         set_echo( false );
         cursor::set_visibility( cursor::visibility::invisible );
 
-        if (::has_colors() == FALSE )
+        if ( !::has_colors() )
         {
-            print( "Your terminal does not support color" );
+            main_win << format( "Your terminal does not support color" );
         }
         else
         {
@@ -31,15 +36,22 @@ struct initializer
         }
     }
 
-    virtual ~initializer()
+    terminal( const terminal& ) = delete;
+    terminal( terminal&& ) = delete;
+    auto operator=( const terminal& ) -> terminal& = delete;
+    auto operator=( terminal && ) -> terminal& = delete;
+
+    ~terminal()
     {
         attrset( A_NORMAL );
         ::endwin();
         ::fflush( stdout );
     }
 
+    static inline widget::stdscr_wrapper main_win {};
+
 private:
-    void init_color_pairs() const noexcept
+    static void init_color_pairs() noexcept
     {
         color_pair( color::red, color::black );
         color_pair( color::green, color::black );

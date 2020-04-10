@@ -27,19 +27,27 @@ enum class attribute
     invisible = A_INVIS
 };
 
-const std::unordered_map<char, attribute> char_to_attribute{
-    { 'N', attribute::normal },  { 'S', attribute::standout }, { 'U', attribute::underline },
-    { 'R', attribute::reverse }, { 'X', attribute::blink },    { 'D', attribute::dim },
-    { 'B', attribute::bold },    { 'P', attribute::protect },  { 'I', attribute::invisible }
+static const std::unordered_map<char, attribute> char_to_attribute {
+    { 'N', attribute::normal },    { 'S', attribute::standout },
+    { 'U', attribute::underline }, { 'R', attribute::reverse },
+    { 'X', attribute::blink },     { 'D', attribute::dim },
+    { 'B', attribute::bold },      { 'P', attribute::protect },
+    { 'I', attribute::invisible }
 };
 
+inline attribute to_attribute( char c )
+{
+    return char_to_attribute.at( c );
+}
+
 template <typename... Attrs>
-void apply_attributes( WINDOW* window, Attrs... attrs ) noexcept
+inline void apply_attributes( raw::window_ptr window, Attrs... attrs ) noexcept
 {
     ::wattron( window, ( attrs | ... ) );
 }
 
-void apply_attributes( WINDOW* window, const std::vector<attribute>& attrs ) noexcept
+inline void apply_attributes( raw::window_ptr window,
+                              const std::vector<attribute>& attrs ) noexcept
 {
     for ( const auto& attr : attrs )
     {

@@ -10,6 +10,7 @@
 #ifndef CXXCURSES_COLOR_HPP
 #define CXXCURSES_COLOR_HPP
 
+#include <curses.h>
 #include <unordered_map>
 
 namespace cxxcurses
@@ -26,10 +27,17 @@ enum class color : short
     black = COLOR_BLACK,
 };
 
-const std::unordered_map<char, color> char_to_color{ { 'r', color::red },     { 'g', color::green },
-                                                     { 'y', color::yellow },  { 'b', color::blue },
-                                                     { 'm', color::magenta }, { 'c', color::cyan },
-                                                     { 'w', color::white } };
+static const std::unordered_map<char, color> char_to_color {
+    { 'r', color::red },  { 'g', color::green },   { 'y', color::yellow },
+    { 'b', color::blue }, { 'm', color::magenta }, { 'c', color::cyan },
+    { 'w', color::white }
+};
+
+inline color to_color( char c )
+{
+    return char_to_color.at( c );
+}
+
 } // namespace cxxcurses
 
 #endif // CXXCURSES_COLOR_HPP

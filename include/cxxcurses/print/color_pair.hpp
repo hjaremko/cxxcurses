@@ -13,6 +13,7 @@
 #include "color.hpp"
 
 #include <algorithm>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -22,12 +23,13 @@ struct color_pair
 {
     using type = std::pair<color, color>;
 
-    color_pair( color fg, color bg = color::black )
+    color_pair( color fg = color::white, color bg = color::black )
     {
-        auto pair{ type{ fg, bg } };
+        auto pair { type { fg, bg } };
 
-        if ( auto pos =
-                 std::find( std::begin( initialized_pairs ), std::end( initialized_pairs ), pair );
+        if ( auto pos = std::find( std::begin( initialized_pairs ),
+                                   std::end( initialized_pairs ),
+                                   pair );
              pos != std::end( initialized_pairs ) )
         {
             pair_number = static_cast<unsigned long>(
@@ -35,15 +37,16 @@ struct color_pair
         }
         else
         {
-            ::init_pair(
-                initialized_pairs.size() + 1, static_cast<short>( fg ), static_cast<short>( bg ) );
+            ::init_pair( initialized_pairs.size() + 1,
+                         static_cast<short>( fg ),
+                         static_cast<short>( bg ) );
             initialized_pairs.push_back( pair );
 
             pair_number = initialized_pairs.size();
         }
     }
 
-    explicit color_pair( unsigned long pair_num ) : pair_number{ pair_num }
+    explicit color_pair( unsigned long pair_num ) : pair_number { pair_num }
     {
         if ( pair_num > initialized_pairs.size() )
         {
@@ -82,13 +85,13 @@ struct color_pair
         return !( lhs < rhs );
     }
 
-    unsigned long pair_number{ 0 };
+    unsigned long pair_number { 0 };
     static std::vector<type> initialized_pairs;
 };
 
-std::vector<color_pair::type> color_pair::initialized_pairs{};
+inline std::vector<color_pair::type> color_pair::initialized_pairs {};
 
-void apply_color( WINDOW* window, color_pair c ) noexcept
+inline void apply_color( raw::window_ptr window, color_pair c ) noexcept
 {
     ::wattron( window, COLOR_PAIR( c.pair_number ) );
 }

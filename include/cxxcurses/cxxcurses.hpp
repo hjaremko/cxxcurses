@@ -10,9 +10,12 @@
 #ifndef CXXCURSES_HPP
 #define CXXCURSES_HPP
 
-#include <curses.h>
+#include "raw.hpp"
 
+#include "misc.hpp"
 #include "print.hpp"
-#include "terminal.hpp"
+#include "widgets.hpp"
+
+#include <curses.h>
 
 #endif // CXXCURSES_HPP
