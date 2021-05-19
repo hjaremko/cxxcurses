@@ -12,6 +12,7 @@
 
 #include <curses.h>
 #include <exception>
+#include <stdexcept>
 #include <string>
 
 namespace cxxcurses
