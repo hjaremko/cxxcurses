@@ -39,7 +39,7 @@ struct terminal
     terminal( const terminal& ) = delete;
     terminal( terminal&& ) = delete;
     auto operator=( const terminal& ) -> terminal& = delete;
-    auto operator=( terminal && ) -> terminal& = delete;
+    auto operator=( terminal&& ) -> terminal& = delete;
 
     ~terminal()
     {
