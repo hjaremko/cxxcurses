@@ -26,7 +26,7 @@ public:
     widget_interface() = default;
     widget_interface( const widget_interface& ) = delete;
     widget_interface( widget_interface&& ) = default;
-    auto operator=( widget_interface && ) -> widget_interface& = default;
+    auto operator=( widget_interface&& ) -> widget_interface& = default;
     auto operator=( const widget_interface& ) -> widget_interface& = delete;
 };
 

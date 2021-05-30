@@ -27,7 +27,7 @@ public:
     glyph_string( const glyph_string& ) = default;
     glyph_string( glyph_string&& ) = default;
     auto operator=( const glyph_string& ) -> glyph_string& = default;
-    auto operator=( glyph_string && ) -> glyph_string& = default;
+    auto operator=( glyph_string&& ) -> glyph_string& = default;
     ~glyph_string() = default;
 
     explicit glyph_string( const std::string_view& string,
@@ -48,7 +48,7 @@ public:
     }
 };
 
-auto parse_arg( std::string_view /*to_parse*/, glyph_string & /*parsed*/ )
+auto parse_arg( std::string_view /*to_parse*/, glyph_string& /*parsed*/ )
     -> glyph_string
 {
     return {};

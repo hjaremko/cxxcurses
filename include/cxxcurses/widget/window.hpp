@@ -99,7 +99,7 @@ public:
     window( const window& ) = delete;
     window( window&& ) = delete;
     auto operator=( const window& ) -> window& = delete;
-    auto operator=( window && ) -> window& = delete;
+    auto operator=( window&& ) -> window& = delete;
     ~window() override = default;
 
     void draw() const override
