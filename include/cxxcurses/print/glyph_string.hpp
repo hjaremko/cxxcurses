@@ -48,17 +48,17 @@ public:
     }
 };
 
-auto parse_arg( std::string_view /*to_parse*/, glyph_string& /*parsed*/ )
+inline auto parse_arg( std::string_view /*to_parse*/, glyph_string& /*parsed*/ )
     -> glyph_string
 {
     return {};
 }
 
 template <typename T, typename... Args>
-auto parse_arg( std::string_view to_parse,
-                glyph_string& parsed,
-                const T& arg,
-                Args&&... args ) -> glyph_string
+inline auto parse_arg( std::string_view to_parse,
+                       glyph_string& parsed,
+                       const T& arg,
+                       Args&&... args ) -> glyph_string
 {
     auto colors { color_pair { color::white } };
     auto attributes { std::vector<attribute> {} };
@@ -94,8 +94,9 @@ auto parse_arg( std::string_view to_parse,
 }
 
 template <typename... Args>
-auto parse( std::string_view to_parse, glyph_string& parsed, Args&&... args )
-    -> glyph_string
+inline auto parse( std::string_view to_parse,
+                   glyph_string& parsed,
+                   Args&&... args ) -> glyph_string
 {
     size_t position = 0;
     for ( auto ch : to_parse )
