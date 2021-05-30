@@ -34,26 +34,27 @@ struct printer
 };
 
 // move and print
-auto format( const int y, const int x ) -> printer
+inline auto format( const int y, const int x ) -> printer
 {
     return { std::make_pair( y, x ) };
 }
 
 // centered
-auto format( const int y ) -> printer
+inline auto format( const int y ) -> printer
 {
     return { std::make_pair( y, std::nullopt ) };
 }
 
 template <typename... Args>
-auto format( std::string_view str, Args&&... args ) -> printer
+inline auto format( std::string_view str, Args&&... args ) -> printer
 {
     auto format_str { glyph_string {} };
     parse( str, format_str, ( std::forward<Args>( args ) )... );
     return printer { std::make_pair( std::nullopt, std::nullopt ), format_str };
 }
 
-auto operator<<( const widget::window_interface& w, const printer& formatted )
+inline auto operator<<( const widget::window_interface& w,
+                        const printer& formatted )
     -> const widget::window_interface&
 {
     const auto x =
