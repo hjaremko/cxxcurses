@@ -30,7 +30,7 @@ struct printer
 
     using coords_t = std::pair<std::optional<int>, std::optional<int>>;
     const coords_t coords {};
-    glyph_string format_str;
+    glyph_string format_str {};
 };
 
 // move and print
