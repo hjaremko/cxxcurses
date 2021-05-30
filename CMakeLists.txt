@@ -16,4 +16,8 @@ target_include_directories(cxxcurses INTERFACE include)
 target_link_libraries(cxxcurses INTERFACE Curses::ncurses)
 target_compile_features(cxxcurses INTERFACE cxx_std_17)
 
+if (NOT CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    return()
+endif()
+
 add_subdirectory(sample)
