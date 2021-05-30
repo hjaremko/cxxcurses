@@ -1,4 +1,4 @@
-#include "cxxcurses/cxxcurses.hpp"
+#include <cxxcurses/cxxcurses.hpp>
 
 #include <ostream>
 #include <string>
@@ -9,12 +9,12 @@ public:
     friend auto operator<<( std::ostream& os, const custom_type& type )
         -> std::ostream&
     {
-        return os << "str: " << type.str << " pi: " << type.pi;
+        return os << "str: " << type.str_ << " pi: " << type.pi_;
     }
 
 private:
-    const std::string str { "user defined" };
-    const double pi { 3.14 };
+    const std::string str_ { "user defined" };
+    const double pi_ { 3.14 };
 };
 
 auto main() -> int
