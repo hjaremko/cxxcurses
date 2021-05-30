@@ -10,8 +10,8 @@
 #ifndef CXXCURSES_TERMINAL_INITIALIZER_HPP
 #define CXXCURSES_TERMINAL_INITIALIZER_HPP
 
-#include "../print.hpp"
-#include "../widgets.hpp"
+#include <cxxcurses/print.hpp>
+#include <cxxcurses/widgets.hpp>
 
 #include <curses.h>
 
