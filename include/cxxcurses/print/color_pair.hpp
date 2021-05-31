@@ -23,7 +23,7 @@ struct color_pair
 {
     using type = std::pair<color, color>;
 
-    color_pair( color fg = color::white, color bg = color::black )
+    color_pair( color fg = color::white, color bg = color::none )
     {
         auto pair { type { fg, bg } };
 

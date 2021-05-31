@@ -33,6 +33,7 @@ struct terminal
         else
         {
             ::start_color();
+            ::use_default_colors();
             init_color_pairs();
         }
     }
@@ -54,13 +55,13 @@ struct terminal
 private:
     static void init_color_pairs() noexcept
     {
-        color_pair( color::red, color::black );
-        color_pair( color::green, color::black );
-        color_pair( color::yellow, color::black );
-        color_pair( color::blue, color::black );
-        color_pair( color::magenta, color::black );
-        color_pair( color::cyan, color::black );
-        color_pair( color::white, color::black );
+        color_pair( color::red, color::none );
+        color_pair( color::green, color::none );
+        color_pair( color::yellow, color::none );
+        color_pair( color::blue, color::none );
+        color_pair( color::magenta, color::none );
+        color_pair( color::cyan, color::none );
+        color_pair( color::white, color::none );
     }
 };
 } // namespace cxxcurses

@@ -17,6 +17,7 @@ namespace cxxcurses
 {
 enum class color : short
 {
+    none = -1,
     red = COLOR_RED,
     green = COLOR_GREEN,
     yellow = COLOR_YELLOW,
