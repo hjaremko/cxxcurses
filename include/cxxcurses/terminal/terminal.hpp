@@ -22,6 +22,7 @@ struct terminal
     terminal()
     {
         ::initscr();
+        ::keypad( stdscr, TRUE );
         set_echo( false );
         cursor::set_visibility( cursor::visibility::invisible );
 
