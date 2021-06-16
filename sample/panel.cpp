@@ -1,0 +1,46 @@
+#include <cxxcurses/cxxcurses.hpp>
+
+#include <ostream>
+#include <string>
+
+class custom_type
+{
+public:
+    friend auto operator<<( std::ostream& os, const custom_type& type )
+        -> std::ostream&
+    {
+        return os << "str: " << type.str_ << " pi: " << type.pi_;
+    }
+
+private:
+    const std::string str_ { "user defined" };
+    const double pi_ { 3.14 };
+};
+
+auto main() -> int
+{
+    namespace cc = cxxcurses;
+    const auto& main_win = cc::terminal::main_win;
+    cc::terminal init;
+
+    const auto hello_string { std::string { "Hello, world" } };
+
+    main_win << cc::format( 4 )( "C++ curses centered example" );
+    main_win << cc::format( 5, 6 )(
+        "Here comes {rR} {gB} {bB}!!!", "multi", "colored", hello_string );
+    main_win << cc::format( 6, 6 )( "Supports {R} types!", custom_type {} );
+
+    auto some_window { cc::widget::window { { 10, 5, 5, 30 },
+                                            cc::terminal::main_win } };
+    auto some_window2 { cc::widget::window { { 13, 7, 5, 30 },
+                                            cc::terminal::main_win } };
+    cc::panel p(some_window.get());
+    cc::panel p2(some_window2.get());
+    p.top();
+    p2.update();
+
+    some_window << cc::format( 2, 2 )( "Hello from sub-window!" );
+    some_window.get_char();
+
+    return 0;
+}

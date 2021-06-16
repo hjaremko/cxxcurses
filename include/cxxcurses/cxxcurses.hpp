@@ -15,6 +15,7 @@
 #include "misc.hpp"
 #include "print.hpp"
 #include "widgets.hpp"
+#include "panel.hpp"
 
 #include <curses.h>
 
